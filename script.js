@@ -1,5 +1,5 @@
 /*  
-    TODO: Implement a graph G with V vertexes and E edges
+    TODO: Implement a graph G with V vertices and E edges
     V = {A, B, C, D, E, F, G, H, I}
     E = {{A, B}, {B, C}, {C, F}, {A, D}, {D, E}, {E, B}, {E, H}, {H, I}}
 */
@@ -35,6 +35,27 @@ class Graph {
             console.log(`${key} -> ${conc}`);
         }
     }
+
+    // Main DFS method
+    dfs(start) {
+        const visited = {};
+    
+        this.DFSUtil(start, visited);
+    }
+    
+    // Processes and explores all the adjacent vertices of the vertex v with which it is called
+    DFSUtil(v, visited) {
+        visited[v] = true;
+        console.log(v);
+    
+        const neighbours = this.adjList.get(v);
+    
+        for (let i in neighbours) {
+            const elem = neighbours[i];
+            if (!visited[elem])
+                this.DFSUtil(elem, visited);
+        }
+    }
 }
 
 const graph = new Graph(9);
@@ -57,3 +78,7 @@ graph.addEdge('H', 'I');
 
 // Printing the graph
 graph.printGraph();
+
+// Doing a Depth First Search
+console.log('\n*** DFS ***');
+graph.dfs('A');
