@@ -36,30 +36,32 @@ class Graph {
         }
     }
 
-    // Main DFS method
-    dfs(start) {
-        const visited = {};
-    
-        this.DFSUtil(start, visited);
-    }
-    
-    // Processes and explores all the adjacent vertices of the vertex v with which it is called
-    DFSUtil(v, visited) {
-        visited[v] = true;
-        console.log(v);
-    
-        const neighbours = this.adjList.get(v);
-    
-        for (let i in neighbours) {
-            const elem = neighbours[i];
-            if (!visited[elem])
-                this.DFSUtil(elem, visited);
+    // Graph traversal function using dfs
+    dfs(start, visited = new Set()) {
+        const neighbors = this.adjList.get(start);
+
+        console.log(start);
+        visited.add(start);
+
+        for (let neighbor of neighbors) {
+            if (!visited.has(neighbor))
+                this.dfs(neighbor, visited);
         }
     }
 }
 
 const graph = new Graph(9);
 const vertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+const edges = [
+    ['A', 'B'],
+    ['B', 'C'],
+    ['C', 'F'],
+    ['A', 'D'],
+    ['D', 'E'],
+    ['E', 'B'],
+    ['E', 'H'],
+    ['H', 'I']
+];
 
 // Adding vertices
 for (let i = 0; i < vertices.length; i++) {
@@ -67,14 +69,7 @@ for (let i = 0; i < vertices.length; i++) {
 }
 
 // Adding edges
-graph.addEdge('A', 'B');
-graph.addEdge('B', 'C');
-graph.addEdge('C', 'F');
-graph.addEdge('A', 'D');
-graph.addEdge('D', 'E');
-graph.addEdge('E', 'B');
-graph.addEdge('E', 'H');
-graph.addEdge('H', 'I');
+edges.forEach(edge => graph.addEdge(...edge));
 
 // Printing the graph
 graph.printGraph();
