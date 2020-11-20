@@ -1,9 +1,3 @@
-/*  
-    TODO: Implement a graph G with V vertices and E edges
-    V = {A, B, C, D, E, F, G, H, I}
-    E = {{A, B}, {B, C}, {C, F}, {A, D}, {D, E}, {E, B}, {E, H}, {H, I}}
-*/
-
 class Graph {
     constructor(nVertices) {
         this.nVertices = nVertices;
@@ -36,8 +30,8 @@ class Graph {
         }
     }
 
-    // Graph traversal function using dfs
-    dfs(start, visited = new Set()) {
+    // Graph traversal function using dfs, prints when finding a cycle
+    dfs(start, parent, visited = new Set()) {
         const neighbors = this.adjList.get(start);
 
         console.log(start);
@@ -45,7 +39,10 @@ class Graph {
 
         for (let neighbor of neighbors) {
             if (!visited.has(neighbor))
-                this.dfs(neighbor, visited);
+                this.dfs(neighbor, start, visited);
+            else if (parent != neighbor && parent !== undefined) {
+                console.log('There is a cycle ! :D');
+            }
         }
     }
 }
