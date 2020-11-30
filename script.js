@@ -1,7 +1,8 @@
 class Graph {
-    constructor(nVertices) {
-        this.nVertices = nVertices;
+    constructor() {
+        this.nComponent = 0;
         this.adjList = new Map();
+        this.visited = new Set();
     }
 
     // Adds the vertex v as key to adjList and initialize its values with an empty array
@@ -20,7 +21,7 @@ class Graph {
         const keys = this.adjList.keys();
         
         for (let key of keys) {
-            let values = this.adjList.get(key);
+            const values = this.adjList.get(key);
             let conc = '';
     
             for (let val of values)
@@ -30,16 +31,30 @@ class Graph {
         }
     }
 
+    // Return the number of components in the graph and explore all of them with dfs
+    countComponent() {
+        const keys = this.adjList.keys();
+
+        for (let key of keys) {
+            if (!this.visited.has(key)) {
+                this.nComponent++;
+                this.dfs(key);
+            }
+        }
+
+        return this.nComponent;
+    }
+
     // Graph traversal function using dfs, prints when finding a cycle
-    dfs(start, parent, visited = new Set()) {
+    dfs(start, parent) {
         const neighbors = this.adjList.get(start);
 
         console.log(start);
-        visited.add(start);
+        this.visited.add(start);
 
         for (let neighbor of neighbors) {
-            if (!visited.has(neighbor))
-                this.dfs(neighbor, start, visited);
+            if (!this.visited.has(neighbor))
+                this.dfs(neighbor, start);
             else if (parent != neighbor && parent !== undefined) {
                 console.log('There is a cycle ! :D');
             }
@@ -47,17 +62,23 @@ class Graph {
     }
 }
 
-const graph = new Graph(9);
-const vertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+const graph = new Graph();
+const vertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
 const edges = [
+    ['E', 'A'],
     ['A', 'B'],
     ['B', 'C'],
-    ['C', 'F'],
-    ['A', 'D'],
-    ['D', 'E'],
-    ['E', 'B'],
-    ['E', 'H'],
-    ['H', 'I']
+    ['C', 'D'],
+    ['B', 'F'],
+    ['F', 'G'],
+    ['G', 'C'],
+    ['I', 'J'],
+    ['J', 'N'],
+    ['H', 'L'],
+    ['L', 'P'],
+    ['P', 'O'],
+    ['O', 'K'],
+    ['K', 'L']
 ];
 
 // Adding vertices
@@ -73,4 +94,4 @@ graph.printGraph();
 
 // Doing a Depth First Search
 console.log('\n*** DFS ***');
-graph.dfs('A');
+console.log(graph.countComponent());
