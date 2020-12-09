@@ -2,22 +2,24 @@ class Graph {
     constructor() {
         this.nComponent = 0;
         this.adjList = new Map();
-        this.cycleList = new Map();
-        this.visited = new Set();
     }
 
-    // Adds the vertex v as key to adjList and initialize its values with an empty array
+    visited = new Set();
+    cycleList = new Map();
+    idCycle = 0;
+
+    // Add the vertex v as key to adjList and initialize its values with an empty array
     addVertex(v) {
         this.adjList.set(v, []);
     }
 
-    // Adds an edge between v and w
+    // Add an edge between v and w
     addEdge(v, w) {
         this.adjList.get(v).push(w);
         this.adjList.get(w).push(v);
     }
 
-    // Prints vertices and its adjacency list
+    // Print vertices and its adjacency list
     printGraph() {
         const keys = this.adjList.keys();
         
@@ -57,9 +59,15 @@ class Graph {
         for (let child of children) {
             if (child == parent)
                 continue;
-            if (this.visited.has(child))                                    // {vertex, child} is a back edge
+            if (this.visited.has(child)) {
+                let temp = [...this.visited];
+                temp = temp.slice(temp.indexOf(child)).slice(0, 4)
+
+                this.cycleList.set(this.idCycle, temp);
                 console.log(`{${vertex}, ${child}} is a back edge`);
-            else                                                            // {vertex, child} is a forward edge
+
+                this.idCycle++;
+            } else
                 this.dfs(child, vertex);
         }
     }
@@ -96,3 +104,5 @@ graph.printGraph();
 
 // Counting number of components
 graph.countComponent();
+
+console.log(graph.cycleList);
